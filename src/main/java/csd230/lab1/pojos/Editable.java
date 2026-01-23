@@ -18,6 +18,9 @@ import java.util.Scanner;
  */
 
 
+/**
+ * DTO for {@link EditableEntity}
+ */
 public abstract class Editable implements Serializable, SaleableItem {
 //    private Long id;
 

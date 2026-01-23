@@ -8,6 +8,8 @@ import jakarta.persistence.TemporalType;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.Objects;
+
 @Entity @DiscriminatorValue("MAGAZINE")
 public class MagazineEntity extends PublicationEntity {
     private int orderQty;
@@ -19,4 +21,14 @@ public class MagazineEntity extends PublicationEntity {
     public void setCurrentIssue(LocalDateTime d) { this.currentIssue = d; }
     public LocalDateTime getCurrentIssue() { return currentIssue; }
     @Override public String toString() { return "Mag{issue=" + currentIssue + ", " + super.toString() + "}"; }
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof MagazineEntity that)) return false;
+        if (!super.equals(o)) return false;
+        return Objects.equals(getTitle(), that.getTitle());
+    }
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), getTitle());
+    }
 }

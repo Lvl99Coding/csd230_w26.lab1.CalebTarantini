@@ -3,6 +3,8 @@ package csd230.lab1.entities;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 
+import java.util.Objects;
+
 @Entity
 public abstract class PublicationEntity extends ProductEntity {
     private String title;
@@ -23,4 +25,17 @@ public abstract class PublicationEntity extends ProductEntity {
     public int getCopies() { return copies; }
     public void setCopies(int c) { this.copies = c; }
     @Override public String toString() { return "Pub{title='" + title + "', price=" + price + ", copies=" + copies + "}"; }
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof PublicationEntity that)) return false;
+        if (!super.equals(o)) return false;
+        return Double.compare(getPrice(), that.getPrice()) == 0
+                && getCopies() == that.getCopies()
+                && Objects.equals(getTitle(), that.getTitle())
+                && Objects.equals(getPrice(), that.getPrice());
+    }
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), getTitle(), getPrice(), getCopies());
+    }
 }

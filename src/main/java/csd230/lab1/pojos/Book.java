@@ -4,6 +4,7 @@ import java.util.Objects;
 
 public class Book extends Publication {
     private String author = "";
+    private String isbn_10 = "";
 
     public Book() {
         super();
@@ -13,7 +14,7 @@ public class Book extends Publication {
         this.author = author;
     }
 
-    public Book(String author, String title, double price, int copies) {
+    public Book(String author, String title, double price, int copies, String isbn_10) {
         super(title, price, copies);
         this.author = author;
     }
@@ -53,6 +54,14 @@ public class Book extends Publication {
 
     public void setAuthor(String author) {
         this.author = author;
+    }
+
+    public String getIsbn_10() {
+        return isbn_10;
+    }
+
+    public void setIsbn_10(String isbn_10) {
+        this.isbn_10 = isbn_10;
     }
 
     @Override

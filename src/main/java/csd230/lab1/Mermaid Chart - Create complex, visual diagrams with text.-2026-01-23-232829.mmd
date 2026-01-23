@@ -1,0 +1,148 @@
+classDiagram
+direction TB
+    class Ticket {
+	    +description
+	    +price
+	    +sellItem()
+    }
+
+    class Publication {
+	    -String title
+	    -double price
+	    -int copies
+	    +getPrice()
+	    +Publication()
+	    +Publication(String title, double price, int copies)
+	    +toString()
+	    +equals()
+	    +hashCode()
+    }
+
+    class Book {
+	    -String author
+	    +edit()
+	    +initialize()
+	    +sellItem()
+	    +Book()
+	    +Book(String author)
+	    +Book(String author, String title, double price, int copies)
+	    +toString()
+	    +equals()
+	    +hashCode()
+    }
+
+    class Magazine {
+	    -int orderQty
+	    -java.util.Date currentIssue
+	    +Magazine()
+	    +Magazine(int orderQty, Date currentIssue, String title, double price, int copies)
+	    +edit()
+	    +initialize()
+	    +sellItem()
+    }
+
+    class DiscMag {
+	    -boolean hasDisc
+	    +edit()
+	    +initialize()
+	    +sellItem()
+	    +DiscMag()
+	    +DiscMag(boolean, hasDisc, int orderQty, Date currentIssue, String title, double price, int copies)
+    }
+
+    class SaleableItem {
+	    +sellItem()
+	    +getPrice()
+    }
+
+    class Serializable {
+    }
+
+    class CashTill {
+	    -double runningTotal
+	    +CashTill()
+	    +showTotal()
+	    +sellItem(SaleableItem item)
+    }
+
+    class Guitar {
+	    -String brand
+	    -String model
+	    -double price
+	    -int numberOfStrings
+	    +Guitar()
+	    +Guitar(String brand, String model, int numberOfStrings, double price)
+	    +getModel()
+	    +setModel()
+	    +getBrand()
+	    +setBrand()
+	    +getNumberOfStrings()
+	    +setNumberOfStrings()
+	    +getPrice()
+	    +setPrice()
+	    +equals()
+	    +edit()
+	    +initialize()
+	    +toString()
+	    +hashCode()
+    }
+
+    class AcousticGuitar {
+	    -boolean hasCutaway
+	    +AcousticGuitar()
+	    +AcousticGuitar(String brand, String model, int numberOfStrings, boolean hasCutaway, double price))
+	    +getHasCutaway()
+	    +setHasCutaway()
+	    +edit()
+	    +initialize()
+	    +sellItem()
+	    +toString()
+	    +hashCode()
+    }
+
+    class ElectricGuitar {
+	    -int numberOfPickups
+	    +ElectricGuitar()
+	    +ElectricGuitar(String brand, String model, int numberOfStrings, int numberOfPickups, double price)
+	    +edit()
+	    +initialize()
+	    +sellItem()
+	    +toString()
+	    +hashCode()
+    }
+
+    class Cart {
+	    -List items
+	    +Cart()
+	    +Cart(List items)
+	    +addItem(Product item)
+	    +List getItems()
+	    +setItems(List items)
+	    +equals(Object o)
+	    +hashCode()
+	    +toString()
+    }
+
+    class Product {
+	    -String productId
+	    +getProductId()
+	    +setProductId()
+    }
+
+	<<Abstract>> Publication
+	<<interface>> SaleableItem
+	<<interface>> Serializable
+	<<Abstract>> Guitar
+
+    Product <|-- Ticket
+    Product <|-- Publication
+    Publication <|-- Book
+    Publication <|-- Magazine
+    Magazine <|-- DiscMag
+    SaleableItem <|.. Product
+    Serializable <|.. Product
+    Product <-- CashTill
+    Cart <|..|> Product
+    Guitar -- Product
+    ElectricGuitar -- Guitar
+    AcousticGuitar -- Guitar
