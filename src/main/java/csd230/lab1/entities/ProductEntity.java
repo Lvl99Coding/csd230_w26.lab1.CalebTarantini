@@ -18,6 +18,10 @@ public abstract class ProductEntity implements Serializable, SaleableItem {
     public void setCarts(Set<CartEntity> carts) { this.carts = carts; }
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
+    public String getProductType() {
+        return this.getClass().getSimpleName();
+    }
+
     @Override
     public String toString() {
         return "ProductEntity{id=" + id + "} : " + super.toString();

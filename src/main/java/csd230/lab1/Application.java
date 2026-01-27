@@ -117,44 +117,7 @@ public class Application implements CommandLineRunner {
         List<AcousticGuitarEntity> readAcousticGtrs = acousticGuitarRepository.findByHasCutaway(true);
         readAcousticGtrs.forEach(System.out::println);
 
-        //Update each entity type
-        newBook.setAuthor("Updated Author");
-        bookRepository.save(newBook);
-        discMag.setHasDisc(false);
-        discMagRepository.save(discMag);
-        magazine.setTitle("Cool Magazine");
-        magazineRepository.save(magazine);
-        ticket.setDescription("for a cool concert");
-        ticketRepository.save(ticket);
-        electricGtr.setBrand("Gibson");
-        electricGuitarRepository.save(electricGtr);
-        acousticGtr.setHasCutaway(false);
-        acousticGuitarRepository.save(acousticGtr);
 
-        System.out.println("All Products:");
-        List<ProductEntity> allProducts = productRepository.findAll();
-        allProducts.forEach(System.out::println);
-
-        //Cart Contents
-        System.out.println("Cart 1 Contents:");
-        Set<ProductEntity> cartContents = cart.getProducts();
-        cartContents.forEach(System.out::println);
-
-        System.out.println("Cart 2 Contents:");
-        Set<ProductEntity> cart2Contents = cart2.getProducts();
-        cart2Contents.forEach(System.out::println);
-
-
-        //Delete carts
-        cartRepository.deleteAll();
-
-        //Delete Products
-        System.out.println("Products before deletion:");
-        allProducts.forEach(System.out::println);
-        productRepository.deleteAll();
-        System.out.println("Products after deletion:");
-        allProducts = productRepository.findAll();
-        allProducts.forEach(System.out::println);
 
 
     }
