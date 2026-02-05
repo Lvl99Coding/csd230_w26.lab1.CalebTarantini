@@ -46,6 +46,7 @@ public class Application implements CommandLineRunner {
     @Override
     @Transactional
     public void run (String... args) throws Exception {
+
         Faker faker = new Faker();
         Commerce cm = faker.commerce();
         com.github.javafaker.Number number = faker.number();
@@ -58,66 +59,12 @@ public class Application implements CommandLineRunner {
         BookEntity newBook = new BookEntity(fakeBook.title(), number.randomDouble(2,10,100), number.numberBetween(1,50), fakeBook.author(), "1234567890");
         bookRepository.save(newBook);
 
+        BookEntity newBook2 = new BookEntity(fakeBook.title(), number.randomDouble(2,10,100), number.numberBetween(1,50), fakeBook.author(), "0987654321");
+        bookRepository.save(newBook2);
+
         //CartEntity
         CartEntity cart = new CartEntity();
         cartRepository.save(cart);
-
-        CartEntity cart2 = new CartEntity();
-        cartRepository.save(cart2);
-
-        //DiscMagEntity
-        DiscMagEntity discMag= new DiscMagEntity(fakeBook.title(), number.randomDouble(2,10,100), number.numberBetween(1,50), number.randomDigit(), now, true);
-        discMagRepository.save(discMag);
-//        //MagazineEntity
-        MagazineEntity magazine = new MagazineEntity(fakeBook.title(), number.randomDouble(2,10,100), number.numberBetween(1,50), number.randomDigit(), now);
-        magazineRepository.save(magazine);
-//        //TicketEntity
-        TicketEntity ticket = new TicketEntity(description, number.randomDouble(2,10,100));
-        ticketRepository.save(ticket);
-
-        //Niche Entities
-        ElectricGuitarEntity electricGtr = new ElectricGuitarEntity("Fender", "Stratocaster", 6, 2, number.randomDouble(2,250,2000));
-        electricGuitarRepository.save(electricGtr);
-
-        AcousticGuitarEntity acousticGtr = new AcousticGuitarEntity("Martin", "Grand J-28E DN", 6, true, number.randomDouble(2,300,2500));
-        acousticGuitarRepository.save(acousticGtr);
-
-        cart.addProduct(newBook);
-        cart.addProduct(discMag);
-        cart.addProduct(magazine);
-        cart.addProduct(ticket);
-        cart.addProduct(electricGtr);
-        cart.addProduct(acousticGtr);
-        cartRepository.save(cart);
-
-        cart2.addProduct(newBook);
-        cart2.addProduct(discMag);
-        cart2.addProduct(magazine);
-        cart2.addProduct(ticket);
-        cart2.addProduct(electricGtr);
-        cart2.addProduct(acousticGtr);
-        cartRepository.save(cart2);
-
-        //Read each entity type from database
-        List<BookEntity> readBook = bookRepository.findByIsbn("1234567890");
-        readBook.forEach(System.out::println);
-
-        List<DiscMagEntity> readDiscMags = discMagRepository.findByHasDisc(true);
-        readDiscMags.forEach(System.out::println);
-
-        List<MagazineEntity> readMagazines = magazineRepository.findByCurrentIssue(magazine.getCurrentIssue());
-        readMagazines.forEach(System.out::println);
-
-        List<TicketEntity> readTickets = ticketRepository.findByPrice(ticket.getPrice());
-        readTickets.forEach(System.out::println);
-
-        List<ElectricGuitarEntity> readElectricGtrs = electricGuitarRepository.findByNumberOfPickups(2);
-        readElectricGtrs.forEach(System.out::println);
-
-        List<AcousticGuitarEntity> readAcousticGtrs = acousticGuitarRepository.findByHasCutaway(true);
-        readAcousticGtrs.forEach(System.out::println);
-
-
 
 
     }

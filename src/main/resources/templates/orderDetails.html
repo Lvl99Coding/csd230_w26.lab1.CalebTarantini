@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Order</title>
+</head>
+<body>
+<h1>Order Contents:</h1>
+
+<table border="1">
+    <thead>
+    <tr>
+        <th>Order ID</th>
+        <th>Order Date</th>
+        <th>Total Amount Paid</th>
+        <th>Items Ordered</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td th:text="${order.id}"></td>
+        <td th:text="${order.getOrderDate()}"></td>
+        <td th:text="${order.getTotalAmount()}"></td>
+        <td>
+            <ul>
+                <li th:each="item : ${order.getProducts()}" th:text="${item.title}"></li>
+            </ul>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<p>
+    <a th:href="@{/books}">Continue Shopping</a>
+</p>
+<br/>
+</body>
+</html>
