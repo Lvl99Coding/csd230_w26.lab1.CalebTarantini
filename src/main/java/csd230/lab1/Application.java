@@ -1,123 +1,138 @@
 package csd230.lab1;
 
-import csd230.lab1.entities.*;
-import csd230.lab1.repositories.*;
+
+import com.github.javafaker.Commerce;
+import com.github.javafaker.Faker;
+import csd230.lab1.entities.BookEntity;
+import csd230.lab1.entities.CartEntity;
+import csd230.lab1.entities.ProductEntity;
+import csd230.lab1.entities.UserEntity;
+import csd230.lab1.pojos.Cart;
+import csd230.lab1.pojos.Magazine;
+import csd230.lab1.pojos.Product;
+import csd230.lab1.repositories.CartEntityRepository;
+import csd230.lab1.repositories.ProductEntityRepository;
+import csd230.lab1.repositories.UserEntityRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import com.github.javafaker.Commerce;
-import com.github.javafaker.Faker;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.time.LocalDateTime;
+
 import java.util.List;
-import java.util.Set;
-//import java.util.List;
+import java.util.Optional;
+
 
 @SpringBootApplication
 public class Application implements CommandLineRunner {
-    private final BookEntityRepository bookRepository;
-    private final CartEntityRepository cartRepository;
-    private final DiscMagEntityRepository discMagRepository;
-    private final MagazineEntityRepository magazineRepository;
-    private final TicketEntityRepository ticketRepository;
     private final ProductEntityRepository productRepository;
-    private final GuitarEntityRepository guitarRepository;
-    private final ElectricGuitarEntityRepository electricGuitarRepository;
-    private final AcousticGuitarEntityRepository acousticGuitarRepository;
+    private final CartEntityRepository cartRepository;
+    private final UserEntityRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
-//    public Application(BookEntityRepository bookRepository, CartRepository cartRepository, DiscMagRepository discMagRepository, MagazineRepository magazineRepository, TicketRepository ticketRepository) {
-    public Application(BookEntityRepository bookRepository, CartEntityRepository cartRepository, DiscMagEntityRepository discMagRepository, MagazineEntityRepository magazineRepository, TicketEntityRepository ticketRepository, ProductEntityRepository productRepository, GuitarEntityRepository guitarRepository, ElectricGuitarEntityRepository electricGuitarRepository, AcousticGuitarEntityRepository acousticGuitarRepository) {
-        this.bookRepository = bookRepository;
-        this.cartRepository = cartRepository;
-        this.discMagRepository = discMagRepository;
-        this.magazineRepository = magazineRepository;
-        this.ticketRepository = ticketRepository;
+
+    public Application(ProductEntityRepository productRepository,
+                       CartEntityRepository cartRepository,
+                       UserEntityRepository userRepository,
+                       PasswordEncoder passwordEncoder
+    ) {
         this.productRepository = productRepository;
-        this.guitarRepository = guitarRepository;
-        this.electricGuitarRepository = electricGuitarRepository;
-        this.acousticGuitarRepository = acousticGuitarRepository;
+        this.cartRepository = cartRepository;
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
-	public static void main(String[] args) {
-		SpringApplication.run(Application.class, args);
-	}
+
+    public static void main(String[] args) {
+        SpringApplication.run(Application.class, args);
+    }
+
 
     @Override
     @Transactional
-    public void run (String... args) throws Exception {
+    public void run(String... args) throws Exception {
         Faker faker = new Faker();
         Commerce cm = faker.commerce();
         com.github.javafaker.Number number = faker.number();
         com.github.javafaker.Book fakeBook = faker.book();
-        LocalDateTime now = LocalDateTime.now();
-        String name=cm.productName();
-        String description=cm.material();
+        String name = cm.productName();
+        String description = cm.material();
+        String priceString = faker.commerce().price();
 
-        //BookEntity
-        BookEntity newBook = new BookEntity(fakeBook.title(), number.randomDouble(2,10,100), number.numberBetween(1,50), fakeBook.author(), "1234567890");
-        bookRepository.save(newBook);
 
-        //CartEntity
+        BookEntity book = new BookEntity(
+                fakeBook.title(),
+                Double.parseDouble(priceString),
+                10,
+                fakeBook.author());
+        ;
+
+
+        // --- START NEW CODE ---
+        csd230.lab1.entities.MagazineEntity magazine = new csd230.lab1.entities.MagazineEntity(
+                faker.lorem().word() + " Magazine",
+                12.99,
+                20,
+                50,
+                java.time.LocalDateTime.now()
+        );
+
+
         CartEntity cart = new CartEntity();
         cartRepository.save(cart);
 
-        CartEntity cart2 = new CartEntity();
-        cartRepository.save(cart2);
 
-        //DiscMagEntity
-        DiscMagEntity discMag= new DiscMagEntity(fakeBook.title(), number.randomDouble(2,10,100), number.numberBetween(1,50), number.randomDigit(), now, true);
-        discMagRepository.save(discMag);
-//        //MagazineEntity
-        MagazineEntity magazine = new MagazineEntity(fakeBook.title(), number.randomDouble(2,10,100), number.numberBetween(1,50), number.randomDigit(), now);
-        magazineRepository.save(magazine);
-//        //TicketEntity
-        TicketEntity ticket = new TicketEntity(description, number.randomDouble(2,10,100));
-        ticketRepository.save(ticket);
-
-        //Niche Entities
-        ElectricGuitarEntity electricGtr = new ElectricGuitarEntity("Fender", "Stratocaster", 6, 2, number.randomDouble(2,250,2000));
-        electricGuitarRepository.save(electricGtr);
-
-        AcousticGuitarEntity acousticGtr = new AcousticGuitarEntity("Martin", "Grand J-28E DN", 6, true, number.randomDouble(2,300,2500));
-        acousticGuitarRepository.save(acousticGtr);
-
-        cart.addProduct(newBook);
-        cart.addProduct(discMag);
-        cart.addProduct(magazine);
-        cart.addProduct(ticket);
-        cart.addProduct(electricGtr);
-        cart.addProduct(acousticGtr);
+        // create a book
+        // add book to the cart
+        cart.addProduct(book);
+        // book.setCart(cart); // dont have to set cart because cart.addProduct() does it for you
         cartRepository.save(cart);
 
-        cart2.addProduct(newBook);
-        cart2.addProduct(discMag);
-        cart2.addProduct(magazine);
-        cart2.addProduct(ticket);
-        cart2.addProduct(electricGtr);
-        cart2.addProduct(acousticGtr);
-        cartRepository.save(cart2);
 
-        //Read each entity type from database
-        List<BookEntity> readBook = bookRepository.findByIsbn("1234567890");
-        readBook.forEach(System.out::println);
-
-        List<DiscMagEntity> readDiscMags = discMagRepository.findByHasDisc(true);
-        readDiscMags.forEach(System.out::println);
-
-        List<MagazineEntity> readMagazines = magazineRepository.findByCurrentIssue(magazine.getCurrentIssue());
-        readMagazines.forEach(System.out::println);
-
-        List<TicketEntity> readTickets = ticketRepository.findByPrice(ticket.getPrice());
-        readTickets.forEach(System.out::println);
-
-        List<ElectricGuitarEntity> readElectricGtrs = electricGuitarRepository.findByNumberOfPickups(2);
-        readElectricGtrs.forEach(System.out::println);
-
-        List<AcousticGuitarEntity> readAcousticGtrs = acousticGuitarRepository.findByHasCutaway(true);
-        readAcousticGtrs.forEach(System.out::println);
+        cart.addProduct(magazine);
+        // magazine.setCart(cart);
+        cartRepository.save(cart);
 
 
+
+
+        // productRepository.save(book);
+
+
+
+
+        List<ProductEntity> allProducts = productRepository.findAll();
+
+
+        for (ProductEntity p : allProducts) {
+            System.out.println(p.toString());
+        }
+        List<CartEntity> allCarts = cartRepository.findAll();
+        for (CartEntity c : allCarts) {
+            System.out.println(c.toString());
+            for (ProductEntity p : c.getProducts()) {
+                System.out.println(p.toString());
+            }
+        }
+
+
+        // ------------------------------------
+        // CREATE USERS (Lecture 2.6)
+        // ------------------------------------
+
+
+        // Admin User (Can Add/Edit/Delete)
+        UserEntity admin = new UserEntity("admin", passwordEncoder.encode("admin"), "ADMIN");
+        userRepository.save(admin);
+
+
+        // Regular User (Can only View/Buy)
+        UserEntity user = new UserEntity("user", passwordEncoder.encode("user"), "USER");
+        userRepository.save(user);
+
+
+        System.out.println("Default users created: admin/admin and user/user");
 
 
     }

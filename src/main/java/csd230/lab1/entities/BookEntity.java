@@ -10,6 +10,7 @@ public class BookEntity extends PublicationEntity {
     private String author;
     private String isbn;
     public BookEntity() {}
+    public BookEntity(String t, double p, int c, String a) { super(t, p, c); this.author = a; }
     public BookEntity(String t, double p, int c, String a, String i) { super(t, p, c); this.author = a; this.isbn = i; }
     public String getAuthor() { return author; }
     public void setAuthor(String a) { this.author = a; }
