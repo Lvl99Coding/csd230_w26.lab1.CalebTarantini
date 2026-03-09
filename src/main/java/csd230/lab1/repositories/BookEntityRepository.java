@@ -7,7 +7,6 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface BookEntityRepository extends JpaRepository<BookEntity, Long> {
-    List<BookEntity> findByIsbn(String isbn);
     BookEntity findById(long id);
     List<BookEntity> findByTitleLike(String contents);
     @Query

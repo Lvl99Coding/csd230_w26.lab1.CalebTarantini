@@ -1,5 +1,6 @@
 package csd230.lab1.entities;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Temporal;
@@ -13,9 +14,15 @@ import java.util.Objects;
 @Entity @DiscriminatorValue("MAGAZINE")
 public class MagazineEntity extends PublicationEntity {
     private int orderQty;
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSSSS")
     private LocalDateTime currentIssue;
     public MagazineEntity() {}
     public MagazineEntity(String t, double p, int c, int o, LocalDateTime d) { super(t, p, c); this.orderQty = o; this.currentIssue = d; }
+    public MagazineEntity(String t, double p, int c, int o) {
+        super(t, p, c);
+        this.orderQty = o;
+        this.currentIssue = LocalDateTime.now(); // Default to current date and time
+    }
     public int getOrderQty() { return orderQty; }
     public void setOrderQty(int o) { this.orderQty = o; }
     public void setCurrentIssue(LocalDateTime d) { this.currentIssue = d; }

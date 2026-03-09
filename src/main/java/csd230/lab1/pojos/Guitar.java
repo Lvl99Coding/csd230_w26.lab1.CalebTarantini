@@ -47,7 +47,7 @@ public abstract class Guitar extends Product {
         this.numberOfStrings = numberOfStrings;
     }
 
-    public double getPrice() {
+    public Double getPrice() {
         return price;
     }
 

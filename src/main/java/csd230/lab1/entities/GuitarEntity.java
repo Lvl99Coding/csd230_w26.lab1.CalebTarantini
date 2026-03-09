@@ -67,7 +67,7 @@ public class GuitarEntity extends ProductEntity {
         this.numberOfStrings = numberOfStrings;
     }
 
-    public double getPrice() {
+    public Double getPrice() {
         return price;
     }
 

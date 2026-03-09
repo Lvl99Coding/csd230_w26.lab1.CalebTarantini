@@ -1,5 +1,6 @@
 package csd230.lab1.config;
 
+
 import csd230.lab1.services.CustomUserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,48 +11,50 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
+
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig {
 
+
     private final CustomUserDetailsService userDetailsService;
+
 
     public WebSecurityConfig(CustomUserDetailsService userDetailsService) {
         this.userDetailsService = userDetailsService;
     }
 
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests((requests) -> requests
-                        // 1. Allow public access to specific endpoints
-                        .requestMatchers("/h2-console/**",
-                                "/login",
-                                "/css/**",
-                                "/js/**",
-                                "/api/rest/**" ,
-                                "/h2-console/**",
-                                "/register"// allow unrestricted access to rest api for testing
+                                // 1. Allow public access to specific endpoints
+//                        .requestMatchers("/h2-console/**",
+//                                "/login",
+//                                "/css/**",
+//                                "/js/**",
+//                                "/api/rest/**"           // allow unrestricted access to rest api for testing
+//
+//                        ).permitAll()
+//
+                                .requestMatchers("/h2-console/**", "/login", "/css/**", "/js/**", "/api/rest/**", "/error").permitAll()
+                                // --- ADD THESE LINES FOR SWAGGER ---
+                                .requestMatchers(
+                                        "/v3/api-docs",          // The actual JSON data
+                                        "/v3/api-docs/**",       // Support for groups
+                                        "/swagger-ui/**",        // UI static resources
+                                        "/swagger-ui.html",      // UI entry point
+                                        "/v3/api-docs.yaml"     // YAML version
+                                ).permitAll()
 
-                        ).permitAll()
+                                // ------------------------------------
 
-                        // --- ADD THESE LINES FOR SWAGGER ---
-                        .requestMatchers(
-                                "/v3/api-docs",          // The actual JSON data
-                                "/v3/api-docs/**",       // Support for groups
-                                "/swagger-ui/**",        // UI static resources
-                                "/swagger-ui.html",      // UI entry point
-                                "/v3/api-docs.yaml"      // YAML version
-                        ).permitAll()
+                                // 2. Admin only endpoints (CRUD operations on books)
+                                .requestMatchers("/books/add", "/books/edit/**", "/books/delete/**").hasRole("ADMIN")
 
-
-                        // ------------------------------------
-
-                        // 2. Admin only endpoints (CRUD operations on books)
-                        .requestMatchers("/books/add", "/books/edit/**", "/books/delete/**").hasRole("ADMIN")
-
-                        // 3. All other requests (view books, cart) require login
-                        .anyRequest().authenticated()
+                                // 3. All other requests (view books, cart) require login
+                                .anyRequest().authenticated()
                 )
                 .formLogin((form) -> form
                         .loginPage("/login")
@@ -64,22 +67,26 @@ public class WebSecurityConfig {
                         .permitAll()
                 );
 
+
         // Required for H2 Console to work with Spring Security (it uses frames)
         http.headers(headers -> headers.frameOptions(frameOptions -> frameOptions.disable()));
 
-//        // Disable CSRF specifically for H2 Console
+        // Disable CSRF specifically for H2 Console
 //        http.csrf(csrf -> csrf.ignoringRequestMatchers("/h2-console/**"));
-        // --- CHANGE THIS SECTION ---
+
+        // Inside your SecurityFilterChain bean
         http.csrf(csrf -> csrf
-                .ignoringRequestMatchers("/h2-console/**", "/api/rest/**") // Add your API path here
+                .ignoringRequestMatchers("/h2-console/**", "/api/rest/**") // Ensure this matches exactly
         );
         return http.build();
     }
+
 
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
 
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {
