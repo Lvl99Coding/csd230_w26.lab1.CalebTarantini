@@ -3,12 +3,7 @@ package csd230.lab1.entities;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
-
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.Objects;
 
 @Entity @DiscriminatorValue("MAGAZINE")
