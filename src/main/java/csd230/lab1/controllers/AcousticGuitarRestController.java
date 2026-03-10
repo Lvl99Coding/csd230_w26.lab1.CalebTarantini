@@ -10,7 +10,7 @@ import java.util.List;
 
 @Tag(name = "AcousticGuitar REST API", description = "JSON API for managing AcousticGuitars")
 @RestController
-@RequestMapping("/api/rest/AcousticGuitars")
+@RequestMapping("/api/rest/acousticguitars")
 @CrossOrigin(origins = "*")
 public class AcousticGuitarRestController {
     private final AcousticGuitarEntityRepository repository;

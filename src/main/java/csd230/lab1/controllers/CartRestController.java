@@ -10,7 +10,7 @@ import java.util.List;
 
 @Tag(name = "Cart REST API", description = "JSON API for managing Carts")
 @RestController
-@RequestMapping("/api/rest/Carts")
+@RequestMapping("/api/rest/carts")
 @CrossOrigin(origins = "*")
 public class CartRestController {
     private final CartEntityRepository repository;

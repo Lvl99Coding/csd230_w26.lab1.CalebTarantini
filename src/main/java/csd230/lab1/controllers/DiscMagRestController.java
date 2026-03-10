@@ -10,7 +10,7 @@ import java.util.List;
 
 @Tag(name = "discMag REST API", description = "JSON API for managing discMags")
 @RestController
-@RequestMapping("/api/rest/discMags")
+@RequestMapping("/api/rest/discmags")
 @CrossOrigin(origins = "*")
 public class DiscMagRestController {
     private final DiscMagEntityRepository repository;
